@@ -1,3 +1,7 @@
+'''
+Вопрос: иду ли я в правильном направлении? Это пока что примерный скелет
+'''
+
 import random
 
 
@@ -50,6 +54,4 @@ def draw_field():
 
 
 if __name__ == '__main__':
-    #draw_field()
-    print(player_turn('X'))
     pass
