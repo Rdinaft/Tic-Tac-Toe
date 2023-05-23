@@ -4,7 +4,6 @@ import random
 class Game:
     field_coordinates = {'top_left': ' ', 'top_middle': ' ', 'top_right': ' ', 'center_left': ' ', 'center_middle': ' ', 'center_right': ' ', 'bottom_left': ' ', 'bottom_middle': ' ', 'bottom_right': ' '}
     sign_list = ['naughts', 'crosses']
-    end = False
     field = [
             [field_coordinates['top_left'], '|', field_coordinates['top_middle'], '|', field_coordinates['top_right']],
             ['---------------------'],
@@ -36,55 +35,76 @@ class Game:
             computer_sign = 'O'
         return player_sign, computer_sign
 
-    def first_turn(self, chosen_side: str) -> bool | None:
+    def player_first_turn(self, chosen_side: str) -> bool | None:
         if chosen_side == 'crosses':
-            print('Your turn!')
             return True
         else:
-            return print('Computer turn!')
+            return False
 
     def player_turn(self, player_sign: str) -> None:
+        print('Your turn!')
         move = input('Enter coordinate: ').lower()
         if move in self.field_coordinates.keys() and self.field_coordinates[move] == ' ':
             self.field_coordinates[move] = player_sign
 
     def computer_turn(self, computer_sign: str) -> None:
+        print('Computer turn!')
         turn_not_over = True
         while turn_not_over:
             coordinate, placed_sign = random.choice(list(self.field_coordinates.items()))
             print(coordinate, placed_sign)
-            if placed_sign == ' ' in self.field_coordinates:
+            if self.field_coordinates[coordinate] == ' ' in self.field_coordinates:
                 self.field_coordinates[coordinate] = computer_sign
             turn_not_over = False
 
-    def end_game(self) -> None:
-        if ' ' not in self.field_coordinates.values():
-            self.end = True
+    def end_game(self, computer_sign: str, player_sign: str) -> None:
+        sign_dict = {'Computer': computer_sign, 'Player': player_sign}
+        for participant in sign_dict:
+            if self.field_coordinates['top_left'] == sign_dict[participant] and self.field_coordinates['top_middle'] == sign_dict[participant] and self.field_coordinates['top_right'] == sign_dict[participant]:
+                print(f'{participant} wins!')
+                return True
+            elif self.field_coordinates['center_left'] == sign_dict[participant] and self.field_coordinates['center_middle'] == sign_dict[participant] and self.field_coordinates['center_right'] == sign_dict[participant]:
+                print(f'{participant} wins!')
+                return True
+            elif self.field_coordinates['bottom_left'] == sign_dict[participant] and self.field_coordinates['bottom_middle'] == sign_dict[participant] and self.field_coordinates['bottom_right'] == sign_dict[participant]:
+                print(f'{participant} wins!')
+                return True
+            elif self.field_coordinates['top_left'] == sign_dict[participant] and self.field_coordinates['center_left'] == sign_dict[participant] and self.field_coordinates['bottom_left'] == sign_dict[participant]:
+                print(f'{participant} wins!')
+                return True
+            elif self.field_coordinates['top_middle'] == sign_dict[participant] and self.field_coordinates['center_middle'] == sign_dict[participant] and self.field_coordinates['bottom_middle'] == sign_dict[participant]:
+                print(f'{participant} wins!')
+                return True
+            elif self.field_coordinates['top_right'] == sign_dict[participant] and self.field_coordinates['center_right'] == sign_dict[participant] and self.field_coordinates['bottom_right'] == sign_dict[participant]:
+                print(f'{participant} wins!')
+                return True
+            elif self.field_coordinates['top_left'] == sign_dict[participant] and self.field_coordinates['center_middle'] == sign_dict[participant] and self.field_coordinates['bottom_right'] == sign_dict[participant]:
+                print(f'{participant} wins!')
+                return True
+            elif self.field_coordinates['top_right'] == sign_dict[participant] and self.field_coordinates['center_middle'] == sign_dict[participant] and self.field_coordinates['bottom_left'] == sign_dict[participant]:
+                print(f'{participant} wins!')
+                return True
+        return False
 
-    def draw_field(self) -> None:
-        return print(*self.field, sep='\n')
-
-
-class Play():
-    def play_game(self) -> None:
-        chosen = Game().greetings()
-        chosen_side = Game().choose_side(chosen)
-        player_sign, computer_sign = Game().signs_definition(chosen_side)
-        first_turn = Game().first_turn(chosen_side)
-
-        while Game().end == False:
-            Game().end_game()
-            if first_turn:
-                Game().draw_field()
-                Game().player_turn(player_sign)
-                Game().draw_field()
-                Game().computer_turn(computer_sign)
-            else:
-                Game().draw_field()
-                Game().computer_turn(computer_sign)
-                Game().draw_field()
-                Game().player_turn(player_sign)
+    def draw_field(self, field) -> None:
+        return print(*field, sep='\n')
 
 
 if __name__ == '__main__':
-    Play().play_game()
+    field = Game().field
+    chosen = Game().greetings()
+    chosen_side = Game().choose_side(chosen)
+    player_sign, computer_sign = Game().signs_definition(chosen_side)
+    first_turn = Game().player_first_turn(chosen_side)
+
+    while Game().end_game(computer_sign, player_sign) == False:
+        if first_turn:
+            Game().draw_field(field)
+            Game().player_turn(player_sign)
+            Game().draw_field(field)
+            Game().computer_turn(computer_sign)
+        else:
+            Game().draw_field(field)
+            Game().computer_turn(computer_sign)
+            Game().draw_field(field)
+            Game().player_turn(player_sign)
