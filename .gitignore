@@ -1,2 +1,4 @@
 env/
 setup.cfg
+.mypy_cache
+__pycache__/
