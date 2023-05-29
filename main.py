@@ -1,27 +1,27 @@
 import random
-import sys
+from typing import Optional
 from constants import SIGN_LIST, FIELD_FROM, FIELD_TO, COLUMNS, FIELD_LIST
 
 
-def greetings() -> str:
+def greetings(signs: list[str]) -> str:
     print("Welcome to Tic-Tac-Toe!")
     chosen = input("Choose your side (random, naughts, crosses): ").lower()
-    while chosen not in SIGN_LIST + ["random"]:
+    while chosen not in signs + ["random"]:
         chosen = input("Choose your side (random, naughts, crosses): ").lower()
     return chosen
 
 
-def choose_side(chosen: str) -> str:
+def choose_side(chosen: str, signs: list[str]) -> str:
     if chosen == "random":
-        chosen_side = random.choice(SIGN_LIST)
+        chosen_side = random.choice(signs)
     else:
         chosen_side = chosen
     print(f"Okay, you choose {chosen_side}!")
     return chosen_side
 
 
-def signs_definition(chosen_side: str) -> tuple[str, str]:
-    if chosen_side == SIGN_LIST[0]:
+def signs_definition(chosen_side: str, signs: list[str]) -> tuple[str, str]:
+    if chosen_side == signs[0]:
         player_sign = "O"
         computer_sign = "X"
     else:
@@ -37,103 +37,100 @@ def is_player_first_turn(chosen_side: str) -> bool:
         return False
 
 
-def player_turn(player_sign: str) -> None:
+def player_turn(player_sign: str, field: list[list[Optional[str]]]) -> None:
     print("---------Your turn!---------")
     not_over = True
     while not_over:
-        move = input("Enter coordinate: ")
-        for line in FIELD_LIST:
-            if move in line:
-                index = line.index(move)
-                line[index] = player_sign
-                not_over = False
+        coordinates = input("Enter coordinates with space: ").split()
+        move_line, move_column = coordinates
+        move_line = int(move_line)
+        move_column = int(move_column)
+        if field[move_line][move_column] is None:
+            field[move_line][move_column] = player_sign
+            not_over = False
     draw_field(FIELD_LIST)
 
 
-def computer_turn(computer_sign: str) -> None:
+def computer_turn(computer_sign: str, field: list[list[Optional[str]]]) -> None:
     print("-------Computer turn!-------")
     not_over = True
     while not_over:
-        coordinate = str(random.randint(FIELD_FROM, FIELD_TO))
-        for line in FIELD_LIST:
-            if coordinate in line:
-                index = line.index(coordinate)
-                line[index] = computer_sign
-                not_over = False
+        line_coordinate = random.randint(FIELD_FROM, FIELD_TO)
+        column_coordinate = random.randint(FIELD_FROM, FIELD_TO)
+        if field[line_coordinate][column_coordinate] is None:
+            field[line_coordinate][column_coordinate] = computer_sign
+            not_over = False
     draw_field(FIELD_LIST)
 
 
-def is_game_ended(computer_sign: str, player_sign: str) -> None:
+def is_game_ended(
+    computer_sign: str, player_sign: str, field: list[list[Optional[str]]]
+) -> str | bool:
     sign_dict = {"Computer": computer_sign, "Player": player_sign}
     for participant in sign_dict:
-        if FIELD_LIST[0] == [sign_dict[participant]] * COLUMNS:
-            print(f"---------{participant} wins!---------")
-            return True
-        elif FIELD_LIST[1] == [sign_dict[participant]] * COLUMNS:
-            print(f"---------{participant} wins!---------")
-            return True
-        elif FIELD_LIST[2] == [sign_dict[participant]] * COLUMNS:
-            print(f"---------{participant} wins!---------")
-            return True
+        if field[0] == [sign_dict[participant]] * COLUMNS:
+            return participant
+        elif field[1] == [sign_dict[participant]] * COLUMNS:
+            return participant
+        elif field[2] == [sign_dict[participant]] * COLUMNS:
+            return participant
         elif (
-            FIELD_LIST[0][0] == sign_dict[participant]
-            and FIELD_LIST[1][0] == sign_dict[participant]
-            and FIELD_LIST[2][0] == sign_dict[participant]
+            field[0][0] == sign_dict[participant]
+            and field[1][0] == sign_dict[participant]
+            and field[2][0] == sign_dict[participant]
         ):
-            print(f"---------{participant} wins!---------")
-            return True
+            return participant
         elif (
-            FIELD_LIST[0][1] == sign_dict[participant]
-            and FIELD_LIST[1][1] == sign_dict[participant]
-            and FIELD_LIST[2][1] == sign_dict[participant]
+            field[0][1] == sign_dict[participant]
+            and field[1][1] == sign_dict[participant]
+            and field[2][1] == sign_dict[participant]
         ):
-            print(f"---------{participant} wins!---------")
-            return True
+            return participant
         elif (
-            FIELD_LIST[0][2] == sign_dict[participant]
-            and FIELD_LIST[1][2] == sign_dict[participant]
-            and FIELD_LIST[2][2] == sign_dict[participant]
+            field[0][2] == sign_dict[participant]
+            and field[1][2] == sign_dict[participant]
+            and field[2][2] == sign_dict[participant]
         ):
-            print(f"---------{participant} wins!---------")
-            return True
+            return participant
         elif (
-            FIELD_LIST[0][0] == sign_dict[participant]
-            and FIELD_LIST[1][1] == sign_dict[participant]
-            and FIELD_LIST[2][2] == sign_dict[participant]
+            field[0][0] == sign_dict[participant]
+            and field[1][1] == sign_dict[participant]
+            and field[2][2] == sign_dict[participant]
         ):
-            print(f"---------{participant} wins!---------")
-            return True
+            return participant
         elif (
-            FIELD_LIST[0][2] == sign_dict[participant]
-            and FIELD_LIST[1][1] == sign_dict[participant]
-            and FIELD_LIST[2][0] == sign_dict[participant]
+            field[0][2] == sign_dict[participant]
+            and field[1][1] == sign_dict[participant]
+            and field[2][0] == sign_dict[participant]
         ):
-            print(f"---------{participant} wins!---------")
-            return True
+            return participant
     return False
 
 
-def is_it_tie() -> bool:
-    return False
-
-
-def draw_field(field: list[list[str]]) -> None:
-    return print(*field, sep="\n")
+def draw_field(field: list[list[Optional[str]]]) -> None:
+    for line in field:
+        print(line)
 
 
 if __name__ == "__main__":
-    chosen = greetings()
-    chosen_side = choose_side(chosen)
-    player_sign, computer_sign = signs_definition(chosen_side)
+    chosen = greetings(SIGN_LIST)
+    chosen_side = choose_side(chosen, SIGN_LIST)
+    player_sign, computer_sign = signs_definition(chosen_side, SIGN_LIST)
     first_turn = is_player_first_turn(chosen_side)
     draw_field(FIELD_LIST)
 
-    while is_game_ended(computer_sign, player_sign) == False:
+    while is_game_ended(computer_sign, player_sign, FIELD_LIST) == False:
         if first_turn:
-            player_turn(player_sign)
-            computer_turn(computer_sign)
+            player_turn(player_sign, FIELD_LIST)
+            computer_turn(computer_sign, FIELD_LIST)
         else:
-            computer_turn(computer_sign)
-            player_turn(player_sign)
+            computer_turn(computer_sign, FIELD_LIST)
+            player_turn(player_sign, FIELD_LIST)
     else:
-        sys.exit(0)
+        print(
+            f"---------{is_game_ended(computer_sign, player_sign, FIELD_LIST)} wins!---------"
+        )
+
+# сделать каким-то образом ничью                         ???
+# закончить цикл is game ended сразу после смены на тру  ???
+# по-другому сделать первый ход                          ???
