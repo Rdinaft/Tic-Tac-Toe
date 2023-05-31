@@ -1,23 +1,40 @@
-from typing import Optional
-from preparing import Signs
 
 
-def is_game_ended(
-    computer_sign: Signs, player_sign: Signs, field: list[list[Optional[str]]], num_of_lines: int
-) -> str | bool:
-    sign_dict = {"Computer": computer_sign, "Player": player_sign}
+
+def get_winner_per_row(sign_dict: dict[str, str], field: list[list[str | None]], num_of_lines: int) -> str | None:
     for participant in sign_dict:
         for line in range(num_of_lines):
             if field[line] == [sign_dict[participant]] * len(field[line]):
                 return participant
-            elif list(map(list, zip(*field)))[line] == [sign_dict[participant]] * len(field[line]):
+    return None
+
+
+def get_winner_per_column(sign_dict: dict[str, str], field: list[list[str | None]], num_of_lines: int) -> str | None:
+    for participant in sign_dict:
+        for line in range(num_of_lines):
+            if list(map(list, zip(*field)))[line] == [sign_dict[participant]] * len(field[line]):
                 return participant
-            '''elif field[0][0] == field[line][line] == field[-1][-1] == sign_dict[participant]:
-                return participant
-            elif field[0][-1] == field[line][line] == field[-1][0] == sign_dict[participant]:
-                return participant'''
+    return None
+
+
+def get_winner_per_diagonal(sign_dict: dict[str, str], field: list[list[str | None]], num_of_lines: int) -> str | None:
+    for participant in sign_dict:
+        if [field[line][line] for line in range(num_of_lines)] == [sign_dict[participant]] * len(field[num_of_lines - 1]):
+            return participant
+        elif [field[num_of_lines-1-line][line] for line in range(num_of_lines)] == [sign_dict[participant]] * len(field[num_of_lines - 1]):
+            return participant
+    return None
+
+
+def check_for_tie(field: list[list[str | None]]) -> bool:
+    if None not in sum(field, []):
+        return True
     return False
 
 
-def is_it_tie():
-    return False
+def spot_the_winner(sign_dict: dict[str, str], field: list[list[str | None]], num_of_lines: int) -> str:
+    ending_conditions = [get_winner_per_row(sign_dict, field, num_of_lines), get_winner_per_column(sign_dict, field, num_of_lines), get_winner_per_diagonal(sign_dict, field, num_of_lines)]
+    for winner in ending_conditions:
+        if winner not in [None, True]:
+            return winner
+    return 'Nobody'

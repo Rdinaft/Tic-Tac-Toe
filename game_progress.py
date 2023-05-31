@@ -1,9 +1,16 @@
 import random
-from typing import Optional
-from preparing import Signs
+from choosing_sides import Signs
 
 
-def put_player_sign(player_sign: Signs, field: list[list[Optional[str]]]) -> None:
+def first_turn_move(chosen_side: str, signs: Signs, num_of_lines: int, field: list[list[str | None]], player_sign: Signs) -> None:
+    for line in range(num_of_lines):
+        if field[line] == [None, None, None] and chosen_side == signs.crosses.name:
+            return put_player_sign(player_sign, field)
+        else:
+            pass
+
+
+def put_player_sign(player_sign: Signs, field: list[list[str | None]]) -> None:
     print("---------Your turn!---------")
     not_over = True
     while not_over:
@@ -14,7 +21,7 @@ def put_player_sign(player_sign: Signs, field: list[list[Optional[str]]]) -> Non
             not_over = False
 
 
-def put_computer_sign(computer_sign: Signs, field: list[list[Optional[str]]], num_of_lines: int) -> None:
+def put_computer_sign(computer_sign: Signs, field: list[list[str | None]], num_of_lines: int) -> None:
     print("-------Computer turn!-------")
     not_over = True
     while not_over:
