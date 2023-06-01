@@ -1,10 +1,11 @@
-def calculate_field_size(field: list[list[str | None]]) -> int:
-    num_of_lines = 0
-    for line in field:
-        num_of_lines += 1
-    return num_of_lines
+from enums import Signs
 
 
-def draw_field(field: list[list[str | None]]) -> None:
+def create_field(field_size: int) -> list[list[Signs | None]]:
+    game_board_list = [[None] * field_size for i in range(field_size)]
+    return game_board_list
+
+
+def draw_field(field: list[list[Signs | None]]) -> None:
     for line in field:
         print(line)

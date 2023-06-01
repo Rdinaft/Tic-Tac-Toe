@@ -1,7 +1,9 @@
+from enums import Signs
 
 
-
-def get_winner_per_row(sign_dict: dict[str, str], field: list[list[str | None]], num_of_lines: int) -> str | None:
+def get_winner_per_row(
+    sign_dict: dict[str, str], field: list[list[Signs | None]], num_of_lines: int
+) -> str | None:
     for participant in sign_dict:
         for line in range(num_of_lines):
             if field[line] == [sign_dict[participant]] * len(field[line]):
@@ -9,32 +11,48 @@ def get_winner_per_row(sign_dict: dict[str, str], field: list[list[str | None]],
     return None
 
 
-def get_winner_per_column(sign_dict: dict[str, str], field: list[list[str | None]], num_of_lines: int) -> str | None:
+def get_winner_per_column(
+    sign_dict: dict[str, str], field: list[list[Signs | None]], num_of_lines: int
+) -> str | None:
     for participant in sign_dict:
-        for line in range(num_of_lines):
-            if list(map(list, zip(*field)))[line] == [sign_dict[participant]] * len(field[line]):
+        for column in range(num_of_lines):
+            if [field[line][column] for line in range(num_of_lines)] == [
+                sign_dict[participant]
+            ] * len(field[column]):
                 return participant
     return None
 
 
-def get_winner_per_diagonal(sign_dict: dict[str, str], field: list[list[str | None]], num_of_lines: int) -> str | None:
+def get_winner_per_diagonal(
+    sign_dict: dict[str, str], field: list[list[Signs | None]], num_of_lines: int
+) -> str | None:
     for participant in sign_dict:
-        if [field[line][line] for line in range(num_of_lines)] == [sign_dict[participant]] * len(field[num_of_lines - 1]):
+        if [field[line][line] for line in range(num_of_lines)] == [
+            sign_dict[participant]
+        ] * len(field[num_of_lines - 1]):
             return participant
-        elif [field[num_of_lines-1-line][line] for line in range(num_of_lines)] == [sign_dict[participant]] * len(field[num_of_lines - 1]):
+        elif [field[num_of_lines - 1 - line][line] for line in range(num_of_lines)] == [
+            sign_dict[participant]
+        ] * len(field[num_of_lines - 1]):
             return participant
     return None
 
 
-def check_for_tie(field: list[list[str | None]]) -> bool:
+def check_for_tie(field: list[list[Signs | None]]) -> bool:
     if None not in sum(field, []):
         return True
     return False
 
 
-def spot_the_winner(sign_dict: dict[str, str], field: list[list[str | None]], num_of_lines: int) -> str:
-    ending_conditions = [get_winner_per_row(sign_dict, field, num_of_lines), get_winner_per_column(sign_dict, field, num_of_lines), get_winner_per_diagonal(sign_dict, field, num_of_lines)]
+def spot_the_winner(
+    sign_dict: dict[str, str], field: list[list[Signs | None]], num_of_lines: int
+) -> str | None:
+    ending_conditions = [
+        get_winner_per_row(sign_dict, field, num_of_lines),
+        get_winner_per_column(sign_dict, field, num_of_lines),
+        get_winner_per_diagonal(sign_dict, field, num_of_lines),
+    ]
     for winner in ending_conditions:
-        if winner not in [None, True]:
+        if winner is not None:
             return winner
-    return 'Nobody'
+    return "Nobody"

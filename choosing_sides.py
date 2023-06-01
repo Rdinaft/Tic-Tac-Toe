@@ -5,7 +5,7 @@ def display_greetings() -> None:
     print("Welcome to Tic-Tac-Toe!")
 
 
-def player_enter_side() -> str:
+def ask_player_side() -> str:
     chosen_side = input("Choose your side (naughts, crosses): ").lower()
     while chosen_side not in [signs.name for signs in Signs]:
         chosen_side = input("Try again: ").lower()
