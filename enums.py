@@ -1,6 +1,6 @@
 import enum
 
 
-class Signs(enum.Enum):
+class Sign(enum.Enum):
     crosses = "X"
     naughts = "O"

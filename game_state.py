@@ -1,8 +1,5 @@
-from enums import Signs
-
-
 def get_winner_per_row(
-    sign_dict: dict[str, str], field: list[list[Signs | None]], num_of_lines: int
+    sign_dict: dict[str, str], field: list[list[str | None]], num_of_lines: int
 ) -> str | None:
     for participant in sign_dict:
         for line in range(num_of_lines):
@@ -12,7 +9,7 @@ def get_winner_per_row(
 
 
 def get_winner_per_column(
-    sign_dict: dict[str, str], field: list[list[Signs | None]], num_of_lines: int
+    sign_dict: dict[str, str], field: list[list[str | None]], num_of_lines: int
 ) -> str | None:
     for participant in sign_dict:
         for column in range(num_of_lines):
@@ -24,7 +21,7 @@ def get_winner_per_column(
 
 
 def get_winner_per_diagonal(
-    sign_dict: dict[str, str], field: list[list[Signs | None]], num_of_lines: int
+    sign_dict: dict[str, str], field: list[list[str | None]], num_of_lines: int
 ) -> str | None:
     for participant in sign_dict:
         if [field[line][line] for line in range(num_of_lines)] == [
@@ -38,14 +35,14 @@ def get_winner_per_diagonal(
     return None
 
 
-def check_for_tie(field: list[list[Signs | None]]) -> bool:
+def check_for_tie(field: list[list[str | None]]) -> bool:
     if None not in sum(field, []):
         return True
     return False
 
 
 def spot_the_winner(
-    sign_dict: dict[str, str], field: list[list[Signs | None]], num_of_lines: int
+    sign_dict: dict[str, str], field: list[list[str | None]], num_of_lines: int
 ) -> str | None:
     ending_conditions = [
         get_winner_per_row(sign_dict, field, num_of_lines),
