@@ -18,9 +18,9 @@ def output_player_side(chosen_side: str) -> None:
 
 def assign_signs(chosen_side: str) -> tuple[Sign, Sign]:
     if chosen_side == Sign.naughts:
-        player_sign = Sign('O')
-        computer_sign = Sign('X')
+        player_sign = Sign.naughts
+        computer_sign = Sign.crosses
     else:
-        player_sign = Sign('X')
-        computer_sign = Sign('O')
+        player_sign = Sign.crosses
+        computer_sign = Sign.naughts
     return player_sign, computer_sign

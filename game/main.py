@@ -18,6 +18,7 @@ from game_progress import (
     first_turn_move,
 )
 from constants import FIELD_SIZE
+from enums import Sign
 
 
 if __name__ == "__main__":
@@ -28,7 +29,7 @@ if __name__ == "__main__":
     player_sign, computer_sign = assign_signs(chosen_side)
     sign_dict = {"Computer": computer_sign, "Player": player_sign}
 
-    draw_field(field)
+    draw_field(field, Sign)
     first_turn_move(chosen_side, FIELD_SIZE, field, player_sign)
 
     while not any(
@@ -40,7 +41,7 @@ if __name__ == "__main__":
         ]
     ):
         take_coordinates_from_computer(computer_sign, field, FIELD_SIZE)
-        draw_field(field)
+        draw_field(field, Sign)
         if any(
             [
                 get_winner_per_row(sign_dict, field, FIELD_SIZE),
@@ -51,6 +52,6 @@ if __name__ == "__main__":
         ):
             continue
         take_coordinates_from_player(player_sign, field)
-        draw_field(field)
+        draw_field(field, Sign)
     else:
         print(f"--------{spot_the_winner(sign_dict, field, FIELD_SIZE)} won!--------")
